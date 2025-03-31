@@ -2,18 +2,48 @@ import {
     useAccount,
     useDisconnect,
     useEnsName,
-    useSwitchChain,
-// useSendTransaction //Do not use from wagmi SDK
-} from "wagmi";
-import {
+    // useSendTransaction
+  } from "wagmi";
+  import {
+
+    useBalanceModal,
     useBalance,
-    useSendTransaction, //Note: Use from ca-wagmi SDK
-    useWriteContract,
-    useUnifiedBalance,
-} from "@arcana/ca-wagmi";
+  } from "@arcana/ca-wagmi";
 
-import { useState } from "react";
-import Decimal from "decimal.js";
-import { erc20Abi } from "viem";
+export function Account() {
+    const { address } = useAccount();
+    const { disconnect } = useDisconnect();
+    const { data: ensName } = useEnsName({ address });
+    const { showModal } = useBalanceModal();
+    const { loading } = useBalance({ symbol: "ETH" });
 
-   
+
+      return (
+        <>
+            {loading ? (
+                <div>
+                    <button
+                    >
+                    Loading wallet...
+                    </button>
+                </div>
+            ) : (
+                <div>
+                    <p>
+                        {address && ensName ? `${ensName} (${address})` : address}
+                    </p>
+                    <button
+                        onClick={() => disconnect()}
+                        >
+                        Disconnect
+                    </button>
+                    <button
+                        onClick={() => showModal()}
+                        >
+                        Show balances
+                    </button>
+                </div>
+            )}
+      </>
+    );
+  }//function Account()
