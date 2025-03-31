@@ -12,6 +12,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { injected } from '@wagmi/connectors';
 import { supportedChains } from './utils/chains';
 
+//Arcana ca-wagmi SDK integration
+import { CAProvider } from '@arcana/ca-wagmi';
+
 // Create transports for each chain dynamically
 const transports = supportedChains.reduce((acc, chain) => {
   acc[chain.id] = http();
@@ -32,7 +35,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <CAProvider>
+            <App />
+        </CAProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>

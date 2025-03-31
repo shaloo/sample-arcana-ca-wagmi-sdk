@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -26,6 +26,20 @@ function App() {
 
   // State for popup visibility
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [activeConnectorName, setActiveConnectorName] = useState<string | null>(null);
+
+  const handleConnect = (connector: any) => {
+    console.log('Connecting with:', connector.name);
+    setActiveConnectorName(connector.name); // Store the selected connector’s name
+    connect({ connector }); // Trigger the connection
+  };
+
+  // Debug state changes
+  useEffect(() => {
+    console.log('isConnected:', isConnected);
+    console.log('activeConnectorName:', activeConnectorName);
+    console.log('address:', address);
+  }, [isConnected, activeConnectorName, address]);
 
   // Find current chain details from supportedChains
   const currentChain = supportedChains.find(chain => chain.id === chainId) || {
@@ -75,11 +89,27 @@ function App() {
           <button className="disconnect-button" onClick={() => disconnect()}>
             Disconnect
           </button>
+          <p>
+            Connected via: {activeConnectorName ?? 'Unknown'} (Enhanced by Arcana CA)
+          </p>
         </div>
       ) : (
+        /*
         <button onClick={() => connect({ connector: connectors[0] })}>
           Connect Wallet
         </button>
+        */
+        <div>
+          {connectors.map((conn) => (          
+            <button
+              key={conn.id}
+              onClick={() => handleConnect(conn)}
+              style={{ marginRight: '10px' }}
+            >
+              Connect with {conn.name}
+            </button>
+          ))}
+        </div>
       )}
       {/* Popup/Modal */}
       {isPopupOpen && (
