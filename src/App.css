@@ -122,3 +122,7 @@
 .popup-address {
   margin-bottom: 10px; /* Optional: adds spacing */
 }
+
+.address-text {
+  word-break: break-all;
+}

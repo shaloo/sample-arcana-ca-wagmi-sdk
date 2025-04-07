@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Connector, useConnect } from "wagmi";
+import '../App.css'
 
 export function ShowWalletOptions() {
   const { connectors, connect } = useConnect();

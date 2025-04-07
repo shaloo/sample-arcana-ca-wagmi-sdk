@@ -9,9 +9,18 @@ import {
 
     useBalanceModal,
     useBalance,
+    useCAFn,
   } from "@arcana/ca-wagmi";
 
 import '../App.css'
+
+function handleBridge() {
+    console.log("TBD")
+}
+ 
+function handleTransfer() {
+    console.log("TBD")
+}
 
 export function Account() {
     const { address } = useAccount();
@@ -19,6 +28,7 @@ export function Account() {
     const { data: ensName } = useEnsName({ address });
     const { showModal } = useBalanceModal();
     const { loading } = useBalance({ symbol: "ETH" });
+    const { bridge, transfer } = useCAFn();
 
 
       return (
@@ -32,7 +42,7 @@ export function Account() {
                 </div>
             ) : (
                 <div>
-                    <p>
+                    <p className="address-text">
                         <strong>Address:</strong>{address && ensName ? `${ensName} (${address})` : address}
                     </p>
                     <button className="app-button arcana-color"
@@ -45,6 +55,16 @@ export function Account() {
                         >
                         Show balances
                     </button>
+                    <button className="app-button arcana-color"
+                        onClick={() => handleBridge()}
+                        >
+                        Bridge
+                    </button>  
+                    <button className="app-button arcana-color"
+                        onClick={() => handleTransfer()}
+                        >
+                        Transfer
+                    </button>                   
                 </div>
             )}
       </>
