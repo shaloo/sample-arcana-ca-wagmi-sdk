@@ -3,25 +3,24 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  --highlight-color: #eaeaea;  
+  --wagmi-color: #0a0a0a; 
+  --arcana-color: #1e1a1c;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 2.5vw;
+  padding: 0.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
-}
-.logo.wagmi:hover {
-  filter: drop-shadow(0 0 2em #0b0b0beb);
-}
-.logo.arcana:hover {
-  filter: drop-shadow(0 0 2em #f6a4d5eb);
 }
 
 @keyframes logo-spin {
@@ -39,10 +38,87 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
 .read-the-docs {
   color: #888;
+}
+
+.container {
+  display: flex; /* Flexbox for horizontal layout */
+  flex-wrap: wrap; /* Allow wrapping when space is tight */
+  gap: 10px; /* Space between appCards */
+  margin: 0 auto; /* Center if needed */
+  padding: 10px; /* Optional padding */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.app-card {
+  flex: 1; /* Equal width distribution */
+  min-width: 200px; /* Minimum width before wrapping */
+  background-color: #ffffff; /* Fallback to white */
+  padding: 0.2vw;
+  text-align: center;
+  border: 1px solid var(--highlight-color, #eaeaea); /* Fallback to white */
+  padding: 0.2vw;;
+  box-sizing: border-box; /* Include padding/border in width */
+}
+
+.arcana-color {
+  --highlight-color: var(--arcana-color);/* Only set the custom property */
+}
+
+.logo.wagmi:hover {
+  filter: drop-shadow(0 0 2em #0b0b0beb);
+}
+
+.logo.arcana:hover {
+  filter: drop-shadow(0 0 2em #f6a4d5eb);
+}
+
+.app-button {
+  background-color: var(--highlight-color, #eaeaea);
+  padding: 0.75vw;
+  margin: 0.5vw;
+}
+
+.wagmi-color {
+  --highlight-color: var(--wagmi-color);/* Only set the custom property */
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensures it’s on top of all UI elements */
+}
+
+.popup-content {
+  background: #f0f0f0; /* Light gray background */
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 300px; /* Adjust as needed */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds depth */
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white; /* White background */
+  color: black; /* Black text for 'X' */
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.popup-address {
+  margin-bottom: 10px; /* Optional: adds spacing */
 }

@@ -11,12 +11,12 @@ import { useAccount, useBalance, useConnect, useDisconnect, useChainId } from 'w
 
 //Changes for ca-wagmi
 import { Account } from "./utils/accounts.tsx";
-import { WalletOptions } from "./utils/wallet-options";
+import { ShowWalletOptions } from "./utils/choose-wallet.tsx";
 
 function ConnectWallet() {
   const { isConnected } = useAccount();
   if (isConnected) return <Account />;
-  return <WalletOptions />;
+  return <ShowWalletOptions />;
 }
 
 function App() {
@@ -63,98 +63,115 @@ function App() {
   ? formatUnits(balance.value, balance.decimals) // Convert wei to human-readable units
   : '0';
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>     
-      </div>
-      <h1>Vite + React </h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite, React logos to learn more
-      </p>
+  const TitleSection = () => (
+    <h1>CA Wagmi SDK Sample Integration App</h1>
+  );
 
-      <div className="app-container">
-        <div>
-          <a href="https://wagmi.sh" target="_blank">
-            <img src="https://raw.githubusercontent.com/wevm/wagmi/refs/heads/main/site/public/logo-light.svg" className="logo" alt="Wagmi logo" />
-          </a>   
-          </div>
-        <h1>Wagmi + Vite + React</h1>       
-        {isConnected ? (
-          <div>
-            <button onClick={() => setIsPopupOpen(true)}>See Balance</button>
-            <button className="disconnect-button" onClick={() => disconnect()}>
-              Disconnect
-            </button>
-            <p>
-              Connected via: {activeConnectorName ?? 'Unknown'}
-            </p>
-          </div>
-        ) : (
-          /*
-          <button onClick={() => connect({ connector: connectors[0] })}>
-            Connect Wallet
-          </button>
-          */
-          <div>
-            {connectors.map((conn) => (          
-              <button
-                key={conn.id}
-                onClick={() => handleConnect(conn)}
-                style={{ marginRight: '10px' }}
-              >
-                Connect with {conn.name}
-              </button>
-            ))}
-          </div>
-        )}
-        {/* Popup/Modal */}
-        {isPopupOpen && (
-          <div className="popup-overlay">
-            <div className="popup-content">
-              <button className="popup-close" onClick={() => setIsPopupOpen(false)}>
-                X
-              </button>
-              <h2>Wallet Details</h2>
-              <p className="popup-address">Connected Address: {address}</p>
-              <p>
-              Balance: {formattedBalance} {balance?.symbol}
-              </p>
-              <p>Chain: {currentChain.name} (ID: {currentChain.id})</p>
-            </div>
-          </div>
-        )}
-        <p className="read-the-docs">
-          Click on the Wagmi logo to learn more
-        </p> 
-      </div>
-      <div className="app-container">
-        <h1>Arcana + Wagmi + Vite + React </h1>
-        <a href="https://arcana.network" target="_blank">
-            <img src="https://avatars.githubusercontent.com/u/82495837" className="logo" alt="Arcana logo" /></a> 
+  const ViteReactSection = () => (
+    <div className="app-card">
+      <a href="https://vite.dev" target="_blank">
+      <img src={viteLogo} className="logo" alt="Vite logo" />
+      </a>
+      <a href="https://react.dev" target="_blank">
+        <img src={reactLogo} className="logo react" alt="React logo" />
+      </a> 
+      <h1>Vite + React </h1>
         <div className="card">
-          <p>Uses <a href="https://www.npmjs.com/package/@arcana/ca-wagmi">`ca-wagmi`</a> SDK</p>
+          <button className="app-button" onClick={() => setCount((count) => count + 1)}>
+            count is {count}
+          </button>
+          <p>
+            Edit <code>src/App.tsx</code> and save to test HMR
+          </p>
         </div>
+        <p className="read-the-docs">
+          Click on the Vite, React logos to learn more
+        </p>
+    </div>
+  );
+
+  const WagmiSection = () => (
+    <div className="app-card">
+      <div>
+        <a href="https://wagmi.sh" target="_blank">
+          <img src="https://raw.githubusercontent.com/wevm/wagmi/refs/heads/main/site/public/logo-light.svg" className="logo" alt="Wagmi logo" />
+        </a>   
+        </div>
+      <h1>Wagmi + Vite + React</h1>       
+      {isConnected ? (
+        <div>
+          <button className="app-button wagmi-color" onClick={() => setIsPopupOpen(true)}>See Balance</button>
+          <button className="app-button wagmi-color" onClick={() => disconnect()}>
+            Disconnect
+          </button>
+          <p>
+            Connected via: {activeConnectorName ?? 'Unknown'}
+          </p>
+        </div>
+      ) : (
+        /*
+        <button className="wagmi-color" onClick={() => connect({ connector: connectors[0] })}>
+          Connect Wallet
+        </button>
+        */
+        <div>
+          {connectors.map((conn) => (          
+            <button className="app-button wagmi-color"
+              key={conn.id}
+              onClick={() => handleConnect(conn)}
+            >
+              Connect with {conn.name}
+            </button>
+          ))}
+        </div>
+      )}
+      {/* Popup/Modal */}
+      {isPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button className="popup-close wagmi-color" onClick={() => setIsPopupOpen(false)}>
+              X
+            </button>
+            <h2>Wallet Details</h2>
+            <p className="popup-address wagmi-color"><strong>Connected Address:</strong> {address}</p>
+            <p><strong>Balance:</strong> {formattedBalance} {balance?.symbol}</p>
+            <p><strong>Chain:</strong> {currentChain.name} (ID: {currentChain.id})</p>
+          </div>
+        </div>
+      )}
+      <p className="read-the-docs">
+        Click on the Wagmi logo to learn more
+      </p> 
+    </div>
+  );
+
+  const CAWagmiSection = () => (
+    <div className="app-card">
+      <h1>Arcana + Wagmi + Vite + React </h1>
+      <a href="https://arcana.network" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/82495837" className="logo" alt="Arcana logo" /></a> 
+      <div className="card">
+        <p>Uses <a href="https://www.npmjs.com/package/@arcana/ca-wagmi">`ca-wagmi`</a> SDK</p>
+      </div>
+      <div className="card arcana-color">
         <ConnectWallet />
         <p className="read-the-docs">
           Click on the Arcana logo to learn more.
-        </p> 
+          </p> 
+        <p>
+          <a href="docs.arcana.network">Developer Docs</a>  
+        </p>
       </div>
-      <div className="card">
-        <a href="docs.arcana.network">Developer Docs</a>  
+    </div>
+  );
+
+  return (
+    <>
+      <TitleSection/>
+      <div className="container">
+        <ViteReactSection/>
+        <WagmiSection/>
+        <CAWagmiSection/>
       </div>
     </>
   )

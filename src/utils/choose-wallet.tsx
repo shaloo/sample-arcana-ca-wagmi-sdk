@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Connector, useConnect } from "wagmi";
 
-export function WalletOptions() {
+export function ShowWalletOptions() {
   const { connectors, connect } = useConnect();
   console.log({ connectors });
   return (
@@ -13,7 +13,7 @@ export function WalletOptions() {
       {connectors
         .filter((c) => c.id !== "injected")
         .map((connector) => (
-          <WalletOption
+          <ListWalletOption
             key={connector.uid}
             connector={connector}
             onClick={() => connect({ connector })}
@@ -23,7 +23,7 @@ export function WalletOptions() {
   );
 }
 
-function WalletOption({
+function ListWalletOption({
     connector,
     onClick,
   }: {
@@ -46,7 +46,7 @@ function WalletOption({
             disabled={!ready}
             type="button"
             onClick={onClick}
-            className="cursor-pointer w-48 text-center text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500"
+            className="app-button arcana-color"
           >
             <img
               src={connector.icon}
