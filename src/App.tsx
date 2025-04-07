@@ -145,13 +145,13 @@ function App() {
         <h1>Arcana + Wagmi + Vite + React </h1>
         <a href="https://arcana.network" target="_blank">
             <img src="https://avatars.githubusercontent.com/u/82495837" className="logo" alt="Arcana logo" /></a> 
-      <div className="card">
+        <div className="card">
           <p>Uses <a href="https://www.npmjs.com/package/@arcana/ca-wagmi">`ca-wagmi`</a> SDK</p>
         </div>
         <ConnectWallet />
         <p className="read-the-docs">
-        Click on the Arcana logo to learn more.
-      </p> 
+          Click on the Arcana logo to learn more.
+        </p> 
       </div>
       <div className="card">
         <a href="docs.arcana.network">Developer Docs</a>  
