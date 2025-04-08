@@ -3,17 +3,18 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './style.css';
 import './App.css'
-import { supportedChains } from './utils/chains';
+import { supportedChains, supportedChainsId, supportedAssets, listTokenContracts } from './utils/chains';
 import { formatUnits } from 'viem'; 
 
 //updates for using wagmi
 import { useAccount, useBalance, useConnect, useDisconnect, useChainId } from 'wagmi';
 
 //Changes for ca-wagmi
+import { WagmiAccount } from "./utils/wagmi-accounts.tsx";
 import { Account } from "./utils/accounts.tsx";
 import { ShowWalletOptions } from "./utils/choose-wallet.tsx";
 
-function ConnectWallet() {
+function ConnectCAWallet() {
   const { isConnected } = useAccount();
   if (isConnected) return <Account />;
   return <ShowWalletOptions />;
@@ -100,10 +101,7 @@ function App() {
       <h1>Wagmi + Vite + React</h1>       
       {isConnected ? (
         <div>
-          <button className="app-button wagmi-color" onClick={() => setIsPopupOpen(true)}>See Balance</button>
-          <button className="app-button wagmi-color" onClick={() => disconnect()}>
-            Disconnect
-          </button>
+          <WagmiAccount />
           <p>
             Connected via: {activeConnectorName ?? 'Unknown'}
           </p>
@@ -154,7 +152,7 @@ function App() {
         <p>Uses <a href="https://www.npmjs.com/package/@arcana/ca-wagmi">`ca-wagmi`</a> SDK</p>
       </div>
       <div className="card arcana-color">
-        <ConnectWallet />
+        <ConnectCAWallet />
         <p className="read-the-docs">
           Click on the Arcana logo to learn more.
           </p> 
