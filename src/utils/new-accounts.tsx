@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import { ethers } from "ethers"; // For utils like parseUnits and contract encoding
+import { useEffect, useState } from "react";
+
 import {
     useAccount,
     useDisconnect,
@@ -16,12 +17,23 @@ import {
 
 import '../App.css'
 
+function handleSend() {
+    console.log("Send: TBD")
+
+}
+
+function handleWriteContract() {
+    console.log("WriteContract: TBD")
+
+}
+
 function handleBridge() {
-    console.log("Bridge: TBD");
+    console.log("Bridge: TBD")
+
 }
  
 function handleTransfer() {
-    console.log("Transfer: TBD");
+    console.log("Transfer: TBD")
 }
 
 export function Account() {
@@ -30,8 +42,8 @@ export function Account() {
     const { data: ensName } = useEnsName({ address });
     const { showModal } = useBalanceModal();
     const { loading } = useBalance({ symbol: "ETH" });
-    const { bridge, transfer } = useCAFn();
     const { sendTransaction } = useSendTransaction();
+    const { bridge, transfer } = useCAFn();
  
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [isSendInputModalOpen, setIsSendInputModalOpen] = useState(false);
@@ -50,7 +62,7 @@ export function Account() {
     
     // Supported assets
     const supportedAssets = ["ETH", "USDC", "USDT"];
-        
+      
     // Token contract addresses (mainnet; adjust for testnets if needed)
     const tokenContracts: { [chainId: number]: { [asset: string]: string } } = {
         1: { // Ethereum
@@ -89,13 +101,18 @@ export function Account() {
     ];
 
     useEffect(() => {
-        if (!address) {
+        if (!loading || !address) {
           setToastMessage("Please connect your wallet");
         }
-    }, [address]);
+    }, [loading, address]);
 
-    const handleSend = async (to: string, chainId: number, asset: string,  amount: string) => {
-        if (loading || !sendTransaction) {
+    const formatBalance = (balance?: { formatted: string; symbol: string }) => {
+        return balance ? `${balance.formatted} ${balance.symbol}` : "Loading...";
+    };
+    
+    const handleSend = async (to: string, chainId: number, asset: string,   
+        amount: string) => {
+        if (!loading || !sendTransaction) {
           setToastMessage("Wallet not connected or sendTransaction, address not available");
           return;
         }
@@ -155,8 +172,8 @@ export function Account() {
           setIsSubmitting(false);
         }
     };
-
-    const handleSendInput = (event: React.FormEvent<HTMLFormElement>) => {
+    
+    const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const toFV = formData.get("to") as string;
@@ -172,131 +189,111 @@ export function Account() {
         const chainId = parseInt(chainFV, 10);
         handleSend(toFV, chainId, assetFV, amountFV);
     };
-
-      return (
-        <>
-            {loading ? (
-                <div>
-                    <button className="app-button arcana-color"
-                    >
-                    Loading wallet...
-                    </button>
-                </div>
+    
+    return (
+        <div>
+          <div>
+            {!loading ? (
+              <div>
+                <button className="app-button arcana-color" disabled>
+                  Loading wallet...
+                </button>
+              </div>
             ) : (
-                <div>
-                    <p className="address-text">
-                        <strong>Address:</strong>{address && ensName ? `${ensName} (${address})` : address}
-                    </p>
-                    <button className="app-button arcana-color"
-                        onClick={() => disconnect()}
-                        >
-                        Disconnect
-                    </button>
-                    <button className="app-button arcana-color"
-                        onClick={() => showModal()}
-                        >
-                        Show balances
-                    </button>
-                    {!sendTransaction ? (
-                        <p>sendTransaction Function not found</p>
-                    ):(
-                    <div>
+              <div>
+                <p className="address-text">
+                  <strong>Address:</strong> {ensName ? `${ensName} (${address})` : address}
+                </p>
+                <p>Balance: {formatBalance(balance)}</p>
+                <button
+                  className="app-button arcana-color"
+                  onClick={() => disconnect()}
+                >
+                  Disconnect
+                </button>
+                <button
+                  className="app-button arcana-color"
+                  onClick={() => showModal()} // Using useBalanceModal
+                >
+                  Show balances
+                </button>
+                <button
+                  className="app-button arcana-color"
+                  onClick={() => setIsSendInputModalOpen(true)}
+                >
+                  Send
+                </button>
+                {toastMessage && (
+                  <div className="app-toast">
+                    {toastMessage}
+                  </div>
+                )}
+                {isSendInputModalOpen && (
+                  <div className="modal-overlay">
+                    <div className="modal-content">
+                      <span className="modal-close" onClick={() => setIsSendInputModalOpen(false)}>
+                        ×
+                      </span>
+                      <h3>Send Transaction</h3>
+                      <form onSubmit={handleFormSubmit}>
+                        <div className="modal-field">
+                          <label htmlFor="to">To Address</label>
+                          <input
+                            type="text"
+                            id="to"
+                            name="to"
+                            placeholder="Enter recipient address"
+                            required
+                          />
+                        </div>
+                        <div className="modal-field">
+                          <label htmlFor="chain">Chain</label>
+                          <select id="chain" name="chain" required>
+                            <option value="">Select a chain</option>
+                            {supportedChains.map((chain) => (
+                              <option key={chain.chainId} value={chain.chainId}>
+                                {chain.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="modal-field">
+                          <label htmlFor="asset">Asset</label>
+                          <select id="asset" name="asset" required>
+                            <option value="">Select an asset</option>
+                            {supportedAssets.map((asset) => (
+                              <option key={asset} value={asset}>
+                                {asset}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="modal-field">
+                          <label htmlFor="amount">Amount</label>
+                          <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            placeholder="Enter amount"
+                            step="0.000001"
+                            min="0"
+                            required
+                          />
+                        </div>
                         <button
-                          className="app-button arcana-color"
-                          onClick={() => setIsSendInputModalOpen(true)}
+                          type="submit"
+                          className="app-button"
+                          disabled={isSubmitting}
                         >
-                          Send
+                          {isSubmitting ? "Submitting..." : "Submit"}
                         </button>
-                        {toastMessage && (
-                          <div className="app-toast">
-                            {toastMessage}
-                          </div>
-                        )}
-                        {isSendInputModalOpen && (
-                          <div className="modal-overlay">
-                            <div className="modal-content">
-                              <span className="modal-close" onClick={() => setIsSendInputModalOpen(false)}>
-                                ×
-                              </span>
-                              <h3>Send Transaction</h3>
-                              <form onSubmit={handleSendInput}>
-                                <div className="modal-field">
-                                  <label htmlFor="to">To Address</label>
-                                  <input
-                                    type="text"
-                                    id="to"
-                                    name="to"
-                                    placeholder="Enter recipient address"
-                                    required
-                                  />
-                                </div>
-                                <div className="modal-field">
-                                  <label htmlFor="chain">Chain</label>
-                                  <select id="chain" name="chain" required>
-                                    <option value="">Select a chain</option>
-                                    {supportedChains.map((chain) => (
-                                      <option key={chain.chainId} value={chain.chainId}>
-                                        {chain.name}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <div className="modal-field">
-                                  <label htmlFor="asset">Asset</label>
-                                  <select id="asset" name="asset" required>
-                                    <option value="">Select an asset</option>
-                                    {supportedAssets.map((asset) => (
-                                      <option key={asset} value={asset}>
-                                        {asset}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <div className="modal-field">
-                                  <label htmlFor="amount">Amount</label>
-                                  <input
-                                    type="number"
-                                    id="amount"
-                                    name="amount"
-                                    placeholder="Enter amount"
-                                    step="0.000001"
-                                    min="0"
-                                    required
-                                  />
-                                </div>
-                                <button
-                                  type="submit"
-                                  className="app-button"
-                                  disabled={isSubmitting}
-                                >
-                                  {isSubmitting ? "Submitting..." : "Submit"}
-                                </button>
-                              </form>
-                            </div>
-                          </div>
-                        )}
+                      </form>
                     </div>
-                    )}
-                    {!bridge ? (
-                        <p>Bridge Function not found</p>
-                    ):(
-                        <button className="app-button arcana-color"
-                            onClick={() => handleBridge()}
-                            >
-                            Bridge
-                        </button>
-                    )}
-                    {!transfer ? (
-                        <p>Transfer Function not found</p>
-                    ):(      
-                        <button className="app-button arcana-color"
-                            onClick={() => handleTransfer()}
-                            >
-                            Transfer
-                        </button>
-                    )}                   
-                </div>
+                  </div>
+                )}
+              </div>
             )}
-      </>
+          </div>
+        </div>
     );
-  }//function Account()
+}
