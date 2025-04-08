@@ -15,11 +15,12 @@ import {
 import '../App.css'
 
 function handleBridge() {
-    console.log("TBD")
+    console.log("Bridge: TBD")
+
 }
  
 function handleTransfer() {
-    console.log("TBD")
+    console.log("Transfer: TBD")
 }
 
 export function Account() {
